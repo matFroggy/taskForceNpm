@@ -1,0 +1,29 @@
+name: Node CI with Jfrog CLI
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
+          TOKEN: ${{ secrets.TOKEN }}
+      - name: install
+        working-directory: npm-example
+        run: npm install
+      - name: login
+        working-directory: npm-example
+        run: npm login --registry=https://psemea.jfrog.io/artifactory --username=mathieup --password=$TOKEN
+      - name: publish
+        working-directory: npm-example
+        run: npm publish --registry https://psemea.jfrog.io:8081/artifactory/api/npm/default-npm-local/
