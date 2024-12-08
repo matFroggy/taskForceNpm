@@ -38,6 +38,6 @@ jobs:
         env:
           TOKEN: ${{ steps.conf.outputs.oidc-token }}
         run: |
-          npm install
           npm login --registry=https://psemea.jfrog.io/artifactory/tf-npm-npm/ --username=mathieup --password=$TOKEN
+          npm install
           npm publish --registry https://psemea.jfrog.io/artifactory/tf-npm-npm/
