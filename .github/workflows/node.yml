@@ -22,7 +22,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Setup JF Cli
         uses: jfrog/setup-jfrog-cli@v4
@@ -38,7 +37,7 @@ jobs:
         env:
           TOKEN: ${{ steps.conf.outputs.oidc-token }}
         run: |
-          npm login --registry=https://psemea.jfrog.io/artifactory/tf-npm-npm/ --username=mathieup --password=$TOKEN
-          npm adduser
+          npm login --registry=https://psemea.jfrog.io/artifactory/ --username=mathieup --password=$TOKEN
+          #npm adduser
           npm install
           npm publish --registry https://psemea.jfrog.io/artifactory/tf-npm-npm/
