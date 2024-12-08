@@ -1,9 +1,15 @@
 name: Node CI with Jfrog CLI
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
+
+permissions:
+  # This is required for requesting the OIDC token
+  id-token: write
+  # This is required for actions/checkout
+  contents: read
 
 jobs:
   build:
@@ -17,13 +23,21 @@ jobs:
         with:
           node-version: 18
           registry-url: 'https://registry.npmjs.org'
-          TOKEN: ${{ secrets.TOKEN }}
-      - name: install
-        working-directory: npm-example
-        run: npm install
-      - name: login
-        working-directory: npm-example
-        run: npm login --registry=https://psemea.jfrog.io/artifactory --username=mathieup --password=$TOKEN
-      - name: publish
-        working-directory: npm-example
-        run: npm publish --registry https://psemea.jfrog.io:8081/artifactory/api/npm/default-npm-local/
+
+      - name: Setup JF Cli
+        uses: jfrog/setup-jfrog-cli@v4
+        id: conf
+        env:
+          # JFrog platform url (for example: https://acme.jfrog.io)
+          JF_URL: ${{ secrets.JF_URL }}
+        with:
+          # Name of the OIDC provider as specified on the OIDC integration page in the JFrog Platform
+          oidc-provider-name: mathieup-github
+
+      - name: install & publish on RT
+        env:
+          TOKEN: ${{ steps.conf.outputs.oidc-token }}
+        run: |
+          npm install
+          npm login --registry=https://psemea.jfrog.io/artifactory/tf-npm-npm/ --username=mathieup --password=$TOKEN
+          npm publish --registry https://psemea.jfrog.io/artifactory/tf-npm-npm/
