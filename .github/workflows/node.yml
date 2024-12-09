@@ -39,6 +39,7 @@ jobs:
           TOKEN: ${{ steps.conf.outputs.oidc-token }}
         run: |
           jf npm-config --global=true --repo-resolve=tf-npm-npm --repo-deploy=tf-npm-npm
+          # it should work now, curation disable 
           jf npm install
           jf npm publish
           #npm login --registry=https://psemea.jfrog.io/artifactory/ --username=mathieup --password=$TOKEN
