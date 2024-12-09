@@ -29,6 +29,7 @@ jobs:
         env:
           # JFrog platform url (for example: https://acme.jfrog.io)
           JF_URL: ${{ secrets.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
         with:
           # Name of the OIDC provider as specified on the OIDC integration page in the JFrog Platform
           oidc-provider-name: mathieup-github
@@ -37,7 +38,9 @@ jobs:
         env:
           TOKEN: ${{ steps.conf.outputs.oidc-token }}
         run: |
-          npm login --registry=https://psemea.jfrog.io/artifactory/ --username=mathieup --password=$TOKEN
-          npm adduser
-          npm install
-          npm publish --registry https://psemea.jfrog.io/artifactory/tf-npm-npm/
+          jf npm-config --global=true --repo-resolve=tf-npm-npm --repo-deploy=tf-npm-npm
+          jf npm install
+          jf npm publish
+          #npm login --registry=https://psemea.jfrog.io/artifactory/ --username=mathieup --password=$TOKEN
+          #npm install
+          #npm publish --registry https://psemea.jfrog.io/artifactory/tf-npm-npm/
