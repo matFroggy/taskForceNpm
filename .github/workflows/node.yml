@@ -36,6 +36,7 @@ jobs:
 
       - name: install & publish on RT
         env:
+          # updated
           TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
         run: |
           jf npm-config --global=true --repo-resolve=tf-npm-virt --repo-deploy=tf-npm-virt
