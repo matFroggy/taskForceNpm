@@ -43,6 +43,8 @@ jobs:
           # it should work now, curation disable 
           jf npm install
           jf npm publish
+          # Push BuildInfo to artifactory
+          jf rt build-publish --project tf
           #npm login --registry=https://psemea.jfrog.io/artifactory/ --username=mathieup --password=$TOKEN
           #npm install
           #npm publish --registry https://psemea.jfrog.io/artifactory/tf-npm-npm/
