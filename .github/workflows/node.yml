@@ -42,11 +42,11 @@ jobs:
           # config
           jf npm-config --global=true --repo-resolve=tf-npm-virt --repo-deploy=tf-npm-virt
           # Collect environment variables for the build
-          jf rt build-collect-env
+          jf rt build-collect-env --project tf
           # Collect VCS details from git and add them to the build
-          jf rt build-add-git
+          jf rt build-add-git --project tf
           # it should work now, curation disable 
-          jf npm install
-          jf npm publish
+          jf npm install --project tf
+          jf npm publish --project tf
           # Push BuildInfo to artifactory
           jf rt build-publish --project tf
