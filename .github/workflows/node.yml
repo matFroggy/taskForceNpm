@@ -39,12 +39,14 @@ jobs:
           # updated
           TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
         run: |
+          # Collect environment variables for the build
+          jf rt build-collect-env
+          # Collect VCS details from git and add them to the build
+          jf rt build-add-git
+          # config
           jf npm-config --global=true --repo-resolve=tf-npm-virt --repo-deploy=tf-npm-virt
           # it should work now, curation disable 
           jf npm install
           #jf npm publish
           # Push BuildInfo to artifactory
           jf rt build-publish --project tf
-          #npm login --registry=https://psemea.jfrog.io/artifactory/ --username=mathieup --password=$TOKEN
-          #npm install
-          #npm publish --registry https://psemea.jfrog.io/artifactory/tf-npm-npm/
