@@ -8,8 +8,8 @@ on:
 permissions:
   # This is required for requesting the OIDC token
   id-token: write
-  # This is required for actions/checkout
-  contents: read
+  # This is required for actions/checkout. Adding write to solve oidc build info push issue in logs
+  contents: write
 
 jobs:
   build:
