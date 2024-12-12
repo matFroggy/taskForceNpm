@@ -43,7 +43,7 @@ jobs:
           
         run: |
           # config
-          jf npm-config --global=true --repo-resolve=tf-npm-virt --repo-deploy=tf-npm-virt
+          jf npm-config --repo-resolve=tf-npm-virt --repo-deploy=tf-npm-virt
           # Collect environment variables for the build
           jf rt build-collect-env --project tf
           # Collect VCS details from git and add them to the build
