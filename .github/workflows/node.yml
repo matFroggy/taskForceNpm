@@ -38,6 +38,9 @@ jobs:
         env:
           # updated
           TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+          JFROG_CLI_BUILD_NAME: tf-npm
+          JFROG_CLI_BUILD_NUMBER: ${{ github.run_number }}
+          
         run: |
           # config
           jf npm-config --global=true --repo-resolve=tf-npm-virt --repo-deploy=tf-npm-virt
@@ -50,3 +53,5 @@ jobs:
           jf npm publish --project tf
           # Push BuildInfo to artifactory
           jf rt build-publish --project tf
+          sleep 5
+          jf rt bpr $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER tf-npm-stg --include-dependencies --project tf
