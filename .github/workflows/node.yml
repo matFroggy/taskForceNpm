@@ -16,16 +16,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout
+      - name: Action checkout
         uses: actions/checkout@v4
-      - name: setup Node
+
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Setup JF Cli
+      - name: Setup JFrog Cli
         uses: jfrog/setup-jfrog-cli@v4
-        id: conf
         env:
           # JFrog platform url (for example: https://acme.jfrog.io)
           JF_URL: ${{ secrets.JF_URL }}
@@ -34,24 +34,22 @@ jobs:
           # Name of the OIDC provider as specified on the OIDC integration page in the JFrog Platform
           oidc-provider-name: mathieup-github
 
-      - name: install & publish on RT
+      - name: NPM install & publish on RT + buildInfo
         env:
-          # updated
           TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
           JFROG_CLI_BUILD_NAME: tf-npm
           JFROG_CLI_BUILD_NUMBER: ${{ github.run_number }}
           
         run: |
-          # config
+          # Npm config through JF CLI, options are important for it to work.
           jf npm-config --global=true --repo-resolve=tf-npm-virt --repo-deploy=tf-npm-virt
+
+          jf npm install --project tf
+          jf npm publish --project tf
+
           # Collect environment variables for the build
           jf rt build-collect-env --project tf
           # Collect VCS details from git and add them to the build
           jf rt build-add-git --project tf
-          # it should work now, curation disable 
-          jf npm install --project tf
-          jf npm publish --project tf
           # Push BuildInfo to artifactory
           jf rt build-publish --project tf
-          #sleep 5
-          #jf rt bpr $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER tf-npm-stg --include-dependencies --project tf
